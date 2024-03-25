@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/nicholasmancilhacarbones/Documents/Documents_UofT/UofT 2nd Year 2nd Semester/ECE_243/final_project/battleship_DE1SoC",
+      "program": "/Users/nicholasmancilhacarbones/Documents/Documents_UofT/UofT 2nd Year 2nd Semester/ECE_243/final_project/battleship_DE1SoC/build/Debug/outDebug"
+    }
+  ]
+}
