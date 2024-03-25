@@ -30,6 +30,9 @@ void plot_pixel(int x, int y, short int line_color);
 void clear_screen();
 void wait_for_vsync();
 
+// New game functions
+void draw_board(GameState* gamestate);
+
 volatile int pixel_buffer_start; // global variable
 short int Buffer1[240][512]; // 240 rows, 512 (320 + padding) columns
 short int Buffer2[240][512];
@@ -64,3 +67,11 @@ void wait_for_vsync(){
         status = *(pixel_ctrl_ptr + 3);
     }
 }
+
+void draw_board(GameState* gamestate){
+    // define how big the blocks will be
+    // define location of each board on the screen
+    // DRAW
+
+}
+
