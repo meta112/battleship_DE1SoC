@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define UNKNOWN 0
+#define MISS -1
+#define HIT 1
+
+
 void plot_pixel(int x, int y, short int line_color);
 void clear_screen();
 void wait_for_vsync();
