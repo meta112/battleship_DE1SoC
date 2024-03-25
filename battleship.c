@@ -5,6 +5,26 @@
 #define MISS -1
 #define HIT 1
 
+typedef struct Ship {
+    int row;
+    int col;
+    int size;
+    bool vertical;
+    int life;
+} Ship;
+
+typedef struct GameState {
+    int row;
+    int col;
+    bool gameOver;
+    bool player1turn;
+    bool player1win;
+    Ship player1ships[5];
+    Ship player2ships[5];
+    int p1life;
+    int p2life;
+    
+} GameState;
 
 void plot_pixel(int x, int y, short int line_color);
 void clear_screen();
