@@ -10,7 +10,7 @@ short int Buffer1[240][512]; // 240 rows, 512 (320 + padding) columns
 short int Buffer2[240][512];
 
 // Relevant subroutines
-/*
+
 // Plot single pixel
 void plot_pixel(int x, int y, short int line_color)
 {
@@ -39,4 +39,3 @@ void wait_for_vsync(){
         status = *(pixel_ctrl_ptr + 3);
     }
 }
-*/
