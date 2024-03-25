@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//void plot_pixel(int x, int y, short int line_color);
-//void clear_screen();
-//void wait_for_vsync();
+void plot_pixel(int x, int y, short int line_color);
+void clear_screen();
+void wait_for_vsync();
 
 volatile int pixel_buffer_start; // global variable
 short int Buffer1[240][512]; // 240 rows, 512 (320 + padding) columns
