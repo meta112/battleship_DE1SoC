@@ -28,6 +28,7 @@ typedef struct GameState {
     int row;
     int col;
     bool gameOver;
+    bool placementRound;
     bool player1turn;
     bool player1win;
     Ship* playerships[2][5]; //player 1's info at index 0, player 2's info at index 1
@@ -43,6 +44,7 @@ GameState* createGameState(){
     gameState->row = 0;
     gameState->col = 0;
     gameState->gameOver = false;
+    gameState->placementRound = true;
     gameState->player1turn = false;
     gameState->player1win = false;
     for (int player = 0; player < 2; player++){
