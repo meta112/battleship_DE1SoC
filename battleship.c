@@ -45,7 +45,7 @@ GameState* createGameState(){
     gameState->col = 0;
     gameState->gameOver = false;
     gameState->placementRound = true;
-    gameState->player1turn = false;
+    gameState->player1turn = true;
     gameState->player1win = false;
     for (int player = 0; player < 2; player++){
         gameState->playerships[player][0] = createShip(5);
