@@ -22,6 +22,7 @@ Ship* createShip(int s){
     ship->size = s;
     ship->vertical = true;
     ship->life = s;
+    return ship;
 }
 
 typedef struct GameState {
@@ -49,10 +50,19 @@ GameState* createGameState(){
     gameState->player1win = false;
     for (int player = 0; player < 2; player++){
         gameState->playerships[player][0] = createShip(5);
+        if (!(gameState->playerships[player][0])) return NULL;
+
         gameState->playerships[player][1] = createShip(4);
+        if (!(gameState->playerships[player][1])) return NULL;
+        
         gameState->playerships[player][2] = createShip(3);
+        if (!(gameState->playerships[player][2])) return NULL;
+        
         gameState->playerships[player][3] = createShip(3);
+        if (!(gameState->playerships[player][3])) return NULL;
+        
         gameState->playerships[player][4] = createShip(2);
+        if (!(gameState->playerships[player][4])) return NULL;
 
         gameState->playerlife[player] = 5;
         
@@ -62,7 +72,8 @@ GameState* createGameState(){
                 gameState->shotboard[player][i][j] = NOSHIP;
             }
         }
-    }   
+    }
+    return gameState;
 }
 
 void deleteGameState(GameState* gameState){
