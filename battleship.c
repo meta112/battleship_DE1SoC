@@ -13,6 +13,16 @@ typedef struct Ship {
     int life;
 } Ship;
 
+Ship* createShip(int s){
+    Ship* ship = (Ship*)malloc(sizeof(Ship));
+    if (!ship) return NULL;
+    ship->row = 0;
+    ship->col = 0;
+    ship->size = s;
+    ship->vertical = true;
+    ship->life = s;
+}
+
 typedef struct GameState {
     int row;
     int col;
