@@ -23,6 +23,8 @@ typedef struct GameState {
     Ship player2ships[5];
     int p1life;
     int p2life;
+    int p1shipboard[10][10];
+    int p2shipboard[10][10];
     
 } GameState;
 
