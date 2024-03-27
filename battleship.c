@@ -20,8 +20,7 @@ typedef struct GameState {
     bool player1turn;
     bool player1win;
     Ship playerships[2][5]; //player 1's info at index 0, player 2's info at index 1
-    int p1life;
-    int p2life;
+    int playerlife[2];
     int shipboard[2][10][10]; //player 1's info at index 0, player 2's info at index 1
     int shotboard[2][10][10];
     
