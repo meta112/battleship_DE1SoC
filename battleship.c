@@ -4,6 +4,7 @@
 #define UNKNOWN 0
 #define MISS -1
 #define HIT 1
+#define NOSHIP -1
 
 typedef struct Ship {
     int row;
@@ -29,12 +30,49 @@ typedef struct GameState {
     bool gameOver;
     bool player1turn;
     bool player1win;
-    Ship playerships[2][5]; //player 1's info at index 0, player 2's info at index 1
+    Ship* playerships[2][5]; //player 1's info at index 0, player 2's info at index 1
     int playerlife[2];
     int shipboard[2][10][10]; //player 1's info at index 0, player 2's info at index 1
     int shotboard[2][10][10];
     
 } GameState;
+
+GameState* createGameState(){
+    GameState* gameState = (GameState*)malloc(sizeof(GameState));
+    if (!gameState) return NULL;
+    gameState->row = 0;
+    gameState->col = 0;
+    gameState->gameOver = false;
+    gameState->player1turn = false;
+    gameState->player1win = false;
+    for (int player = 0; player < 2; player++){
+        gameState->playerships[player][0] = createShip(5);
+        gameState->playerships[player][1] = createShip(4);
+        gameState->playerships[player][2] = createShip(3);
+        gameState->playerships[player][3] = createShip(3);
+        gameState->playerships[player][4] = createShip(2);
+
+        gameState->playerlife[player] = 5;
+        
+        for (int i = 0; i < 10; i++){
+            for (int j = 0; j < 10; j++){
+                gameState->shipboard[player][i][j] = NOSHIP;
+                gameState->shotboard[player][i][j] = NOSHIP;
+            }
+        }
+    }   
+}
+
+void deleteGameState(GameState* gameState){
+    for (int player = 0; player < 2; player++){
+        for (int ship = 0; ship < 5; ship++){
+            free(gameState->playerships[player][ship]);
+            gameState->playerships[player][ship] = NULL;
+        }
+    }
+    free(gameState);
+    gameState = NULL;
+}
 
 void plot_pixel(int x, int y, short int line_color);
 void clear_screen();
