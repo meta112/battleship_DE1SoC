@@ -206,6 +206,10 @@ int main(){
     volatile int *SW_ptr = 0xFF200040;
     volatile int *KEY_ptr = 0xFF200050;
     while(1){
+        // call function to draw title screen
+        while (getKEYPress(KEY_ptr) != 3){
+            continue;
+        }
         GameState* gameState = createGameState();
         if (!gameState) break;
         
