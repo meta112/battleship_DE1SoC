@@ -32,6 +32,7 @@ typedef struct GameState {
     bool placementRound;
     bool player1turn;
     bool player1win;
+
     Ship* playerships[2][5]; //player 1's info at index 0, player 2's info at index 1
     int playerlife[2];
     int shipboard[2][10][10]; //player 1's info at index 0, player 2's info at index 1
@@ -48,6 +49,7 @@ GameState* createGameState(){
     gameState->placementRound = true;
     gameState->player1turn = true;
     gameState->player1win = false;
+
     for (int player = 0; player < 2; player++){
         gameState->playerships[player][0] = createShip(5);
         if (!(gameState->playerships[player][0])) return NULL;
@@ -136,7 +138,24 @@ void draw_board(GameState* gamestate){
 
 }
 
+int getSWNum(volatile int* SW_ptr, int orig){
+    int sw = *SW_ptr;
+    if (sw & 0x200) return 0;
+    if (sw & 0x100) return 1;
+    if (sw & 0x80) return 2;
+    if (sw & 0x40) return 3;
+    if (sw & 0x20) return 4;
+    if (sw & 0x10) return 5;
+    if (sw & 0x8) return 6;
+    if (sw & 0x4) return 7;
+    if (sw & 0x2) return 8;
+    if (sw & 0x1) return 9;
+    return orig;
+}
+
 int main(){
+    volatile int *SW_ptr = 0xFF200040;
+    volatile int *KEY_ptr = 0xFF200050;
     while(1){
         GameState* gameState = createGameState();
         if (!gameState) break;
