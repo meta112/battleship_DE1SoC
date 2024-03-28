@@ -136,3 +136,32 @@ void draw_board(GameState* gamestate){
 
 }
 
+int main(){
+    while(1){
+        GameState* gameState = createGameState();
+        if (!gameState) break;
+        
+        while (gameState->placementRound){
+            // players take turns placing ships
+        }
+
+        while (!(gameState->gameOver)){
+            // players take turns shooting each other's ships
+        }
+
+        if (gameState->player1win){
+            // draw victory screen for player 1
+        } else {
+            // victory for player 2
+        }
+
+        while (1) { // create a loop until player presses button to start next game
+
+        }
+
+        deleteGameState(gameState);
+
+    }
+
+    return 0;
+}
