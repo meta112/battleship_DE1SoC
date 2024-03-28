@@ -237,6 +237,7 @@ int main(){
                     gameState->player1turn = false;
                 } else {
                     shipToPlace++;
+                    gameState->player1turn = true;
                     if (shipToPlace == 5) gameState->placementRound = false;
                 }
             }
@@ -245,6 +246,7 @@ int main(){
 
         while (!(gameState->gameOver)){
             // players take turns shooting each other's ships
+
         }
 
         if (gameState->player1win){
