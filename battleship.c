@@ -153,6 +153,27 @@ int getSWNum(volatile int* SW_ptr, int orig){
     return orig;
 }
 
+int getKEYPress(volatile int* KEY_ptr){
+    int key = *(KEY_ptr + 3);
+    if (key & 0b1000){
+        *(KEY_ptr + 3) = key | 0b1000;
+        return 3;
+    }
+    if (key & 0b100){
+        *(KEY_ptr + 3) = key | 0b100;
+        return 2;
+    }
+    if (key & 0b10){
+        *(KEY_ptr + 3) = key | 0b10;
+        return 1;
+    }
+    if (key & 0b1){
+        *(KEY_ptr + 3) = key | 0b1;
+        return 0;
+    }
+    return -1;
+}
+
 int main(){
     volatile int *SW_ptr = 0xFF200040;
     volatile int *KEY_ptr = 0xFF200050;
