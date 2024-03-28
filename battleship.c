@@ -285,8 +285,8 @@ int main(){
             // victory for player 2
         }
 
-        while (1) { // create a loop until player presses button to start next game
-
+        while (getKEYPress(KEY_ptr) != -1) { // create a loop until player presses button to start next game
+            continue;
         }
 
         deleteGameState(gameState);
