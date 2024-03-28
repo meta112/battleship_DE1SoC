@@ -5,6 +5,7 @@
 #define MISS -1
 #define HIT 1
 #define NOSHIP -1
+#define BOARDSIZE 10
 
 typedef struct Ship {
     int row;
@@ -32,11 +33,11 @@ typedef struct GameState {
     bool placementRound;
     bool player1turn;
     bool player1win;
-
+    bool colsel;
     Ship* playerships[2][5]; //player 1's info at index 0, player 2's info at index 1
     int playerlife[2];
-    int shipboard[2][10][10]; //player 1's info at index 0, player 2's info at index 1
-    int shotboard[2][10][10];
+    int shipboard[2][BOARDSIZE][BOARDSIZE]; //player 1's info at index 0, player 2's info at index 1
+    int shotboard[2][BOARDSIZE][BOARDSIZE];
     
 } GameState;
 
@@ -49,7 +50,7 @@ GameState* createGameState(){
     gameState->placementRound = true;
     gameState->player1turn = true;
     gameState->player1win = false;
-
+    gameState->colsel = true;
     for (int player = 0; player < 2; player++){
         gameState->playerships[player][0] = createShip(5);
         if (!(gameState->playerships[player][0])) return NULL;
@@ -68,8 +69,8 @@ GameState* createGameState(){
 
         gameState->playerlife[player] = 5;
         
-        for (int i = 0; i < 10; i++){
-            for (int j = 0; j < 10; j++){
+        for (int i = 0; i < BOARDSIZE; i++){
+            for (int j = 0; j < BOARDSIZE; j++){
                 gameState->shipboard[player][i][j] = NOSHIP;
                 gameState->shotboard[player][i][j] = NOSHIP;
             }
@@ -174,6 +175,29 @@ int getKEYPress(volatile int* KEY_ptr){
     return -1;
 }
 
+bool checkLegalShipPlacement(GameState* gameState, int turn, Ship* ship){
+    bool valid = true;
+    if (ship->vertical){
+        if (ship->row + ship->size > BOARDSIZE) ship->row = BOARDSIZE - ship->size;
+        for (int i = 0; i < ship->size; i++){
+            if (gameState->shipboard[turn][ship->row + i][ship->col] != NOSHIP){
+                // call a function to highlight overlapping square
+                valid = false;
+            }
+        }
+    } else {
+        if (ship->col + ship->size > BOARDSIZE) ship->col = BOARDSIZE - ship->size;
+        for (int i = 0; i < ship->size; i++){
+            if (gameState->shipboard[turn][ship->row][ship->col + i] != NOSHIP){
+                // call a function to highlight overlapping square
+                valid = false;
+            }
+        }
+    }
+    return valid;
+    
+}
+
 int main(){
     volatile int *SW_ptr = 0xFF200040;
     volatile int *KEY_ptr = 0xFF200050;
@@ -181,8 +205,42 @@ int main(){
         GameState* gameState = createGameState();
         if (!gameState) break;
         
+        int shipToPlace = 0;
+        int turn;
+        
         while (gameState->placementRound){
             // players take turns placing ships
+            turn = gameState->player1turn ? 0 : 1;
+            Ship* ship = gameState->playerships[turn][shipToPlace];
+
+            int key = getKEYPress(KEY_ptr);
+            if (key == 3) gameState->colsel = !(gameState->colsel);
+            if (key == 2) ship->vertical = !(ship->vertical);
+            if (gameState->colsel){
+                ship->col = getSWNum(SW_ptr, ship->col);
+            } else {
+                ship->row = getSWNum(SW_ptr, ship->row);
+            }
+
+            if (key == 1 && checkLegalShipPlacement(gameState, turn, ship)){
+                if (ship->vertical){
+                    for (int i = 0; i < ship->size; i++){
+                        gameState->shipboard[turn][ship->row + i][ship->col] = shipToPlace;
+                    }
+                } else {
+                    for (int i = 0; i < ship->size; i++){
+                        gameState->shipboard[turn][ship->row][ship->col + i] = shipToPlace;
+                    }
+                }
+                
+                if (gameState->player1turn){
+                    gameState->player1turn = false;
+                } else {
+                    shipToPlace++;
+                    if (shipToPlace == 5) gameState->placementRound = false;
+                }
+            }
+
         }
 
         while (!(gameState->gameOver)){
