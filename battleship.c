@@ -1,10 +1,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// for shotboard
 #define UNKNOWN 0
 #define MISS -1
 #define HIT 1
+
+//for shipboard
 #define NOSHIP -1
+
 #define BOARDSIZE 10
 
 typedef struct Ship {
@@ -72,7 +76,7 @@ GameState* createGameState(){
         for (int i = 0; i < BOARDSIZE; i++){
             for (int j = 0; j < BOARDSIZE; j++){
                 gameState->shipboard[player][i][j] = NOSHIP;
-                gameState->shotboard[player][i][j] = NOSHIP;
+                gameState->shotboard[player][i][j] = UNKNOWN;
             }
         }
     }
@@ -246,6 +250,32 @@ int main(){
 
         while (!(gameState->gameOver)){
             // players take turns shooting each other's ships
+            turn = gameState->player1turn ? 0 : 1;
+            int notTurn = turn ? 0 : 1;
+            int key = getKEYPress(KEY_ptr);
+            if (key == 3) gameState->colsel = !(gameState->colsel);
+            if (gameState->colsel){
+                gameState->col = getSWNum(SW_ptr, gameState->col);
+            } else {
+                gameState->row = getSWNum(SW_ptr, gameState->row);
+            }
+            if (key == 1 && gameState->shotboard[turn][gameState->row][gameState->col] == UNKNOWN){
+                int shotResult = gameState->shipboard[notTurn][gameState->row][gameState->col];
+                if (shotResult == NOSHIP){
+                    gameState->shotboard[turn][gameState->row][gameState->col] = MISS;
+                } else {
+                    gameState->shotboard[turn][gameState->row][gameState->col] = HIT;
+                    Ship* ship = gameState->playerships[notTurn][shotResult];
+                    ship->life--;
+                    if (ship->life == 0){
+                        gameState->playerlife[notTurn]--;
+                        if (gameState->playerlife[notTurn] == 0){
+                            gameState->gameOver = true;
+                            gameState->player1win = gameState->player1turn;
+                        }
+                    }
+                }
+            }
 
         }
 
