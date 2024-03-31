@@ -271,6 +271,9 @@ int main(){
                     gameState->shotboard[turn][gameState->row][gameState->col] = HIT;
                     Ship* ship = gameState->playerships[notTurn][shotResult];
                     ship->life--;
+
+                    // call a function to draw ships left or ships shot, something to indicate game progress
+
                     if (ship->life == 0){
                         gameState->playerlife[notTurn]--;
                         if (gameState->playerlife[notTurn] == 0){
