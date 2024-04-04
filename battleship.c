@@ -99,7 +99,8 @@ void clear_screen();
 void wait_for_vsync();
 
 // New game functions
-void draw_board(GameState* gamestate);
+void draw_game_board(GameState* gamestate);
+void draw_placement_game_board(GameState* gamestate);
 
 volatile int pixel_buffer_start; // global variable
 short int Buffer1[240][512]; // 240 rows, 512 (320 + padding) columns
@@ -136,12 +137,34 @@ void wait_for_vsync(){
     }
 }
 
-void draw_board(GameState* gamestate){
+// ----------------------------------------------------------------------------
+
+void draw_game_board(GameState* gamestate){
     // define how big the blocks will be
     // define location of each board on the screen
     // DRAW
 
+    for (int x_pixel = 0; x_pixel < 320; x_pixel++){
+        for (int y_pixel = 0; y_pixel < 240; y_pixel++){
+            // get the pixel of the screen and print
+
+            // if it is a dead square, (gameState->shotboard[turn][gameState->row][gameState->col] = MISS or HIT;)
+        }
+    }
+
 }
+
+void draw_placement_game_board(GameState* gamestate){
+    // draw the placement board
+    for (int x_pixel = 0; x_pixel < 320; x_pixel++){
+        for (int y_pixel = 0; y_pixel < 240; y_pixel++){
+            // get the pixel of the screen and print
+        }
+    }
+
+}
+
+// ----------------------------------------------------------------------------
 
 int getSWNum(volatile int* SW_ptr, int orig){
     int sw = *SW_ptr;
@@ -206,7 +229,9 @@ int main(){
     volatile int *SW_ptr = 0xFF200040;
     volatile int *KEY_ptr = 0xFF200050;
     while(1){
-        // call function to draw title screen
+
+        // call function to draw title screen  -------------------------------------------------------------
+
         while (getKEYPress(KEY_ptr) != 3){
             continue;
         }
@@ -215,6 +240,8 @@ int main(){
         
         int shipToPlace = 0;
         int turn;
+
+        // call function to draw the game screen (ship positioning stage)
         
         while (gameState->placementRound){
             // players take turns placing ships
@@ -249,6 +276,8 @@ int main(){
                     if (shipToPlace == 5) gameState->placementRound = false;
                 }
             }
+
+            // PRINT OUT THE BOARD FOR PLACEMENT
 
         }
 
