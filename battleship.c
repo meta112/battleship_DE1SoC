@@ -8622,6 +8622,7 @@ int main() {
             }
           }
         }
+        gameState->player1turn = !(gameState->player1turn);
       }
     }
 
