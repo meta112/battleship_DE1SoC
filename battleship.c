@@ -7722,6 +7722,8 @@ typedef struct GameState {
   bool player1turn;
   bool player1win;
   bool colsel;
+  bool ships1visible;
+  bool ships2visible;
   Ship* playerships[2][5];  // player 1's info at index 0, player 2's info at
                             // index 1
   int playerlife[2];
@@ -7741,6 +7743,8 @@ GameState* createGameState() {
   gameState->player1turn = true;
   gameState->player1win = false;
   gameState->colsel = true;
+  gameState->ships1visible = false;
+  gameState->ships2visible = false;
   for (int player = 0; player < 2; player++) {
     gameState->playerships[player][0] = createShip(5);
     if (!(gameState->playerships[player][0])) return NULL;
@@ -7981,10 +7985,18 @@ int main() {
 
     while (!(gameState->gameOver)) {
       // players take turns shooting each other's ships
+      // draw ships if player wants to see, hide otherwise
       turn = gameState->player1turn ? 0 : 1;
       int notTurn = turn ? 0 : 1;
       int key = getKEYPress(KEY_ptr);
       if (key == 3) gameState->colsel = !(gameState->colsel);
+      if (key == 2) {
+        if (turn == 0) {
+            gameState->ships1visible = !(gameState->ships1visible);
+        } else {
+            gameState->ships2visible = !(gameState->ships2visible);
+        }
+      }
       if (gameState->colsel) {
         gameState->col = getSWNum(SW_ptr, gameState->col);
       } else {
