@@ -8246,17 +8246,7 @@ void draw_title_screen() {
   }
 }
 
-void draw_game_board(GameState* gamestate) {
-  // define how big the blocks will be
-  // define location of each board on the screen
-  // DRAW
-
-    // get the pixel of the screen and print
-      // if it is a dead square,
-      // (gameState->shotboard[turn][gameState->row][gameState->col] == MISS or
-      // HIT)
-
-      // else if
+void draw_background(){
 
     for (int y_pixel = 0; y_pixel < 240; y_pixel++) {
         for (int x_pixel = 0; x_pixel < 320; x_pixel++) {
@@ -8300,11 +8290,32 @@ void draw_game_board(GameState* gamestate) {
         }
     }
 
+}
+
+void draw_game_board(GameState* gamestate) {
+  // define how big the blocks will be
+  // define location of each board on the screen
+  // DRAW
+
+    // get the pixel of the screen and print
+      // if it is a dead square,
+      // (gameState->shotboard[turn][gameState->row][gameState->col] == MISS or
+      // HIT)
+
+      // else if
+
+    draw_background(gamestate);
+
     // -----------------------------------------------------------------------------------------------------------
 
     // now check the gamestate
     // if the game is in the positioning rounds 
     if (gamestate->placementRound == true && gamestate->player1turn == true){
+        // first player board starts at 24 x 83
+
+    for (int ship_num = 0; ship_num < 5){
+
+    }
      
     } else if (gamestate->placementRound == false && gamestate->player1turn == true){
 
@@ -8316,41 +8327,6 @@ void draw_game_board(GameState* gamestate) {
 
     } else { // gamestate->placementRound == false && gamestate->player1turn == false
 
-    }
-
-
-    // DRAW FIRST BOARD
-
-    for (int y_loc = 0; y_loc < 12; y_loc++){
-        for (int x_loc = 0; x_loc < 12; x_loc++){
-            int y_location = y_loc*12 + 83;
-            int x_location = x_loc*12 + 24;
-            // draw 1 square
-            for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
-                for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
-                    volatile short int *frame_buffer;
-                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
-                    *frame_buffer = background[y_pixel][x_pixel];
-                }
-            }
-        }
-    }
-
-    // DRAW SECOND BOARD
-
-    for (int y_loc = 0; y_loc < 12; y_loc++){
-        for (int x_loc = 0; x_loc < 12; x_loc++){
-            int y_location = y_loc*12 + 83;
-            int x_location = x_loc*12 + 180;
-            // draw 1 square
-            for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
-                for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
-                    volatile short int *frame_buffer;
-                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
-                    *frame_buffer = background[y_pixel][x_pixel];
-                }
-            }
-        }
     }
 
 }
@@ -8436,6 +8412,8 @@ int main() {
     }
     GameState* gameState = createGameState();
     if (!gameState) break;
+
+    draw_background(gameState);
 
     int shipToPlace = 0;
     int turn;
