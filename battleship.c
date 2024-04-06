@@ -8322,7 +8322,7 @@ void draw_ship(int size, bool isVertical, int x_loc, int y_loc){
             }
 
         } else if(size == 3){
-            for (int y_pixel = 0; y_pixel < 26; y_pixel++) {
+            for (int y_pixel = 0; y_pixel < 36; y_pixel++) {
                 for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                     volatile short int *frame_buffer;
                     frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
