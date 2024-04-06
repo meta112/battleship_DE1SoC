@@ -8386,7 +8386,7 @@ void draw_placement_game_board(GameState* gameState, int num_of_ships) {
 
         // draw the indication sign at 47 x 53
         int x_location = 47;
-        int y_location = 54;
+        int y_location = 53;
         for (int y_pixel = 0; y_pixel < 15; y_pixel++) {
             for (int x_pixel = 0; x_pixel < 7; x_pixel++) {
                 if (turn_indicator[y_pixel][x_pixel] != 0){
@@ -8400,15 +8400,15 @@ void draw_placement_game_board(GameState* gameState, int num_of_ships) {
         for (int ship_num = 0; ship_num < num_of_ships; ship_num++){
             draw_ship(gameState->playerships[0][ship_num]->size, 
                     gameState->playerships[0][ship_num]->vertical,
-                    gameState->playerships[0][ship_num]->col,
-                    gameState->playerships[0][ship_num]->row);
+                    gameState->playerships[0][ship_num]->col * 12 + 24,
+                    gameState->playerships[0][ship_num]->row * 12 + 83);
         }
      
     } else {
 
         // draw the indication sign at 204 x 53
         int x_location = 204;
-        int y_location = 54;
+        int y_location = 53;
         for (int y_pixel = 0; y_pixel < 15; y_pixel++) {
             for (int x_pixel = 0; x_pixel < 7; x_pixel++) {
                 if (turn_indicator[y_pixel][x_pixel] != 0){
@@ -8422,8 +8422,8 @@ void draw_placement_game_board(GameState* gameState, int num_of_ships) {
         for (int ship_num = 0; ship_num < num_of_ships; ship_num++){
         draw_ship(gameState->playerships[1][ship_num]->size, 
                 gameState->playerships[1][ship_num]->vertical,
-                gameState->playerships[1][ship_num]->col,
-                gameState->playerships[1][ship_num]->row);
+                gameState->playerships[1][ship_num]->col + 180,
+                gameState->playerships[1][ship_num]->row + 83);
         }
 
     }
@@ -8520,7 +8520,7 @@ int main() {
     while (gameState->placementRound) {
 
         if(need_to_draw == true){
-            draw_placement_game_board(gameState, shipToPlace);
+            draw_placement_game_board(gameState, shipToPlace+1);
             need_to_draw = false;
         }
 
@@ -8538,9 +8538,17 @@ int main() {
         need_to_draw = true;
       }
       if (gameState->colsel) {
+        int old_ship_col = ship->col;
         ship->col = getSWNum(SW_ptr, ship->col);
+        if(ship->col != old_ship_col){
+            need_to_draw = true;
+        }
       } else {
+        int old_ship_row = ship->row;
         ship->row = getSWNum(SW_ptr, ship->row);
+        if(ship->row != old_ship_row){
+            need_to_draw = true;
+        }
       }
 
       if (key == 1 && checkLegalShipPlacement(gameState, turn, ship)) {
