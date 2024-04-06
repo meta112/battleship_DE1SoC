@@ -8542,12 +8542,14 @@ int main() {
         int old_ship_col = ship->col;
         ship->col = getSWNum(SW_ptr, ship->col);
         if(ship->col != old_ship_col){
+            checkLegalShipPlacement(gameState, turn, ship);
             need_to_draw = true;
         }
       } else {
         int old_ship_row = ship->row;
         ship->row = getSWNum(SW_ptr, ship->row);
         if(ship->row != old_ship_row){
+            checkLegalShipPlacement(gameState, turn, ship);
             need_to_draw = true;
         }
       }
