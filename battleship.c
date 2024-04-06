@@ -8535,6 +8535,7 @@ int main() {
         }
       if (key == 2) {
         ship->vertical = !(ship->vertical);
+        checkLegalShipPlacement(gameState, turn, ship);
         need_to_draw = true;
       }
       if (gameState->colsel) {
