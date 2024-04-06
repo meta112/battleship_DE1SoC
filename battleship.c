@@ -8379,7 +8379,7 @@ void draw_ship(int size, bool isVertical, int x_loc, int y_loc){
 
 void draw_placement_game_board(GameState* gameState, int num_of_ships) {
 
-    draw_background(gameState);
+    draw_background();
 
     // if the game is in the positioning rounds
     if (gameState->player1turn == true){
@@ -8430,9 +8430,141 @@ void draw_placement_game_board(GameState* gameState, int num_of_ships) {
 
 }
 
-void draw_game_board(GameState* gamestate) {
-
+void draw_game_board(GameState* gameState) {
+    
     draw_background();
+
+    if (gameState->player1turn == true){
+
+        // draw the indication sign at 47 x 53
+        int x_location = 47;
+        int y_location = 53;
+        for (int y_pixel = 0; y_pixel < 15; y_pixel++) {
+            for (int x_pixel = 0; x_pixel < 7; x_pixel++) {
+                if (turn_indicator[y_pixel][x_pixel] != 0){
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                    *frame_buffer = turn_indicator[y_pixel][x_pixel];
+                }
+            }
+        }
+
+        // if you want to check your ships, it's here
+        if(gameState->ships1visible == true){
+            for (int ship_num = 0; ship_num < 5; ship_num++){
+            draw_ship(gameState->playerships[0][ship_num]->size, 
+                    gameState->playerships[0][ship_num]->vertical,
+                    gameState->playerships[0][ship_num]->col * 12 + 24,
+                    gameState->playerships[0][ship_num]->row * 12 + 83);
+            }
+
+        }
+
+    } else {
+
+        // draw the indication sign at 204 x 53
+        int x_location = 204;
+        int y_location = 53;
+        for (int y_pixel = 0; y_pixel < 15; y_pixel++) {
+            for (int x_pixel = 0; x_pixel < 7; x_pixel++) {
+                if (turn_indicator[y_pixel][x_pixel] != 0){
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                    *frame_buffer = turn_indicator[y_pixel][x_pixel];
+                }
+            }
+        }
+
+        // if you want to check your ships, it's here
+        if(gameState->ships2visible == true){
+            for (int ship_num = 0; ship_num < 5; ship_num++){
+            draw_ship(gameState->playerships[1][ship_num]->size, 
+                    gameState->playerships[1][ship_num]->vertical,
+                    gameState->playerships[1][ship_num]->col * 12 + 180,
+                    gameState->playerships[1][ship_num]->row * 12 + 83);
+            }
+        }
+
+    }
+
+    // draw the bomb and ocean tiles
+    // DRAW FIRST OCEAN/BOMBS
+
+    for (int y_loc = 0; y_loc < 10; y_loc++){
+        for (int x_loc = 0; x_loc < 10; x_loc++){
+            int y_location = y_loc*12 + 83;
+            int x_location = x_loc*12 + 24;
+            // draw 1 square
+            if(gameState->shotboard[1][x_loc][y_loc] == HIT){
+                for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                    for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                        volatile short int *frame_buffer;
+                        frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                        *frame_buffer = hit_square[y_pixel][x_pixel];
+                    }
+                }
+            } else if (gameState->shotboard[1][x_loc][y_loc] == MISS){
+                for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                    for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                        volatile short int *frame_buffer;
+                        frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                        *frame_buffer = water_square[y_pixel][x_pixel];
+                    }
+                }
+            }
+        }
+    }
+
+    // DRAW SECOND OCEAN/BOMBS
+
+    for (int y_loc = 0; y_loc < 10; y_loc++){
+        for (int x_loc = 0; x_loc < 10; x_loc++){
+            int y_location = y_loc*12 + 83;
+            int x_location = x_loc*12 + 180;
+            // draw 1 square
+            if(gameState->shotboard[0][x_loc][y_loc] == HIT){
+                for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                    for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                        volatile short int *frame_buffer;
+                        frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                        *frame_buffer = hit_square[y_pixel][x_pixel];
+                    }
+                }
+            } else if (gameState->shotboard[0][x_loc][y_loc] == MISS){
+                for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                    for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                        volatile short int *frame_buffer;
+                        frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                        *frame_buffer = water_square[y_pixel][x_pixel];
+                    }
+                }
+            }
+        }
+    }
+
+    if (gameState->player1turn == true){
+        // draw crosshairs at board 2 col/row
+        int y_location = gameState->row*12 + 83;
+        int x_location = gameState->col*12 + 24;
+        for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+            for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                volatile short int *frame_buffer;
+                frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                *frame_buffer = crosshairs[y_pixel][x_pixel];
+            }
+        }
+    } else {
+        // draw crosshairs at board 1 col/row
+        int y_location = gameState->row*12 + 83;
+        int x_location = gameState->col*12 + 180;
+        for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+            for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                volatile short int *frame_buffer;
+                frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                *frame_buffer = crosshairs[y_pixel][x_pixel];
+            }
+        }
+    }
 
 }
 
@@ -8580,7 +8712,14 @@ int main() {
       
     }
 
+    need_to_draw = true;
+
     while (!(gameState->gameOver)) {
+        if(need_to_draw == true){
+            draw_game_board(gameState);
+            need_to_draw = false;
+        }
+
       // players take turns shooting each other's ships
       // draw ships if player wants to see, hide otherwise
       turn = gameState->player1turn ? 0 : 1;
@@ -8593,11 +8732,20 @@ int main() {
         } else {
             gameState->ships2visible = !(gameState->ships2visible);
         }
+        need_to_draw = true;
       }
       if (gameState->colsel) {
+        int old_game_col = gameState->col;
         gameState->col = getSWNum(SW_ptr, gameState->col);
+        if(gameState->col != old_game_col){
+            need_to_draw = true;
+        }
       } else {
+        int old_game_row = gameState->row;
         gameState->row = getSWNum(SW_ptr, gameState->row);
+        if(gameState->row != old_game_row){
+            need_to_draw = true;
+        }
       }
       if (key == 1 &&
           gameState->shotboard[turn][gameState->row][gameState->col] ==
@@ -8623,6 +8771,7 @@ int main() {
           }
         }
         gameState->player1turn = !(gameState->player1turn);
+        need_to_draw = true;
       }
     }
 
