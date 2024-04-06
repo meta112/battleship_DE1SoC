@@ -8445,12 +8445,15 @@ int main() {
           }
         }
 
-        if (gameState->player1turn) {
-          gameState->player1turn = false;
-        } else {
-          shipToPlace++;
-          gameState->player1turn = true;
-          if (shipToPlace == 5) gameState->placementRound = false;
+        shipToPlace++;
+        if (shipToPlace == 5){
+            if (gameState->player1turn){
+                gameState->player1turn = false;
+                shipToPlace = 0;
+            } else {
+                gameState->player1turn = true;
+                gameState->placementRound = false;
+            }
         }
       }
 
