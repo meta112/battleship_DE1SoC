@@ -8422,8 +8422,8 @@ void draw_placement_game_board(GameState* gameState, int num_of_ships) {
         for (int ship_num = 0; ship_num < num_of_ships; ship_num++){
         draw_ship(gameState->playerships[1][ship_num]->size, 
                 gameState->playerships[1][ship_num]->vertical,
-                gameState->playerships[1][ship_num]->col + 180,
-                gameState->playerships[1][ship_num]->row + 83);
+                gameState->playerships[1][ship_num]->col * 12 + 180,
+                gameState->playerships[1][ship_num]->row * 12 + 83);
         }
 
     }
