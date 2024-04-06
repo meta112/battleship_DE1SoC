@@ -11,7 +11,7 @@
 
 #define BOARDSIZE 10
 
-#define BUFFER_ADDRESS 0x8000000;
+#define BUFFER_ADDRESS 0x8000000
 
 const short int crosshairs[12][12] = { 
     {0,65503,65503,65535,65535,65503,65503,65535,65503,65503,65503,0}, {65503,0,65503,0,0,0,0,0,0,65503,0,63422}, 
@@ -8195,11 +8195,12 @@ void wait_for_vsync();
 
 // New game functions
 void draw_game_board(GameState* gamestate);
-void draw_placement_game_board(GameState* gamestate);
+void draw_placement_game_board(GameState* gamestate, int num_of_ships);
 void draw_title_screen();
+void draw_background();
+void draw_ship(int size, bool isVertical, int x_loc, int y_loc);
 
-volatile int pixel_buffer_start;  // global variable
-pixel_buffer_start = 0x8000000;
+volatile int pixel_buffer_start = 0x8000000;   // global variable
 short int Buffer1[240][512];      // 240 rows, 512 (320 + padding) columns
 short int Buffer2[240][512];
 
@@ -8247,6 +8248,8 @@ void draw_title_screen() {
 }
 
 void draw_background(){
+    // first player board starts at 24 x 83
+    // second player board starts at 180 x 83
 
     for (int y_pixel = 0; y_pixel < 240; y_pixel++) {
         for (int x_pixel = 0; x_pixel < 320; x_pixel++) {
@@ -8258,8 +8261,8 @@ void draw_background(){
 
     // DRAW FIRST BOARD
 
-    for (int y_loc = 0; y_loc < 12; y_loc++){
-        for (int x_loc = 0; x_loc < 12; x_loc++){
+    for (int y_loc = 0; y_loc < 10; y_loc++){
+        for (int x_loc = 0; x_loc < 10; x_loc++){
             int y_location = y_loc*12 + 83;
             int x_location = x_loc*12 + 24;
             // draw 1 square
@@ -8267,7 +8270,7 @@ void draw_background(){
                 for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                     volatile short int *frame_buffer;
                     frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
-                    *frame_buffer = background[y_pixel][x_pixel];
+                    *frame_buffer = normal_tile[y_pixel][x_pixel];
                 }
             }
         }
@@ -8275,8 +8278,8 @@ void draw_background(){
 
     // DRAW SECOND BOARD
 
-    for (int y_loc = 0; y_loc < 12; y_loc++){
-        for (int x_loc = 0; x_loc < 12; x_loc++){
+    for (int y_loc = 0; y_loc < 10; y_loc++){
+        for (int x_loc = 0; x_loc < 10; x_loc++){
             int y_location = y_loc*12 + 83;
             int x_location = x_loc*12 + 180;
             // draw 1 square
@@ -8284,7 +8287,7 @@ void draw_background(){
                 for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                     volatile short int *frame_buffer;
                     frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
-                    *frame_buffer = background[y_pixel][x_pixel];
+                    *frame_buffer = normal_tile[y_pixel][x_pixel];
                 }
             }
         }
@@ -8292,52 +8295,145 @@ void draw_background(){
 
 }
 
-void draw_game_board(GameState* gamestate) {
-  // define how big the blocks will be
-  // define location of each board on the screen
-  // DRAW
+void draw_ship(int size, bool isVertical, int x_loc, int y_loc){
+    if(isVertical){
+        if(size == 5){
+            for (int y_pixel = 0; y_pixel < 60; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship5[y_pixel][x_pixel];
+                }
+            }
 
-    // get the pixel of the screen and print
-      // if it is a dead square,
-      // (gameState->shotboard[turn][gameState->row][gameState->col] == MISS or
-      // HIT)
+        } else if(size == 4){
+            for (int y_pixel = 0; y_pixel < 48; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship4[y_pixel][x_pixel];
+                }
+            }
 
-      // else if
+        } else if(size == 3){
+            for (int y_pixel = 0; y_pixel < 26; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship3[y_pixel][x_pixel];
+                }
+            }
 
-    draw_background(gamestate);
+        } else if(size == 2){
+            for (int y_pixel = 0; y_pixel < 24; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship2[y_pixel][x_pixel];
+                }
+            }
+        }
 
-    // -----------------------------------------------------------------------------------------------------------
 
-    // now check the gamestate
-    // if the game is in the positioning rounds 
-    if (gamestate->placementRound == true && gamestate->player1turn == true){
-        // first player board starts at 24 x 83
+    } else{
+        if(size == 5){
+            for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 60; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship5[x_pixel][y_pixel];
+                }
+            }
 
-    for (int ship_num = 0; ship_num < 5){
+        } else if(size == 4){
+            for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 48; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship4[x_pixel][y_pixel];
+                }
+            }
+
+        } else if(size == 3){
+            for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 36; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship3[x_pixel][y_pixel];
+                }
+            }
+
+        } else if(size == 2){
+            for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
+                for (int x_pixel = 0; x_pixel < 24; x_pixel++) {
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_loc)<<10) + ((x_pixel + x_loc)<<1);
+                    *frame_buffer = ship2[x_pixel][y_pixel];
+                }
+            }
+
+        }
 
     }
+}
+
+void draw_placement_game_board(GameState* gameState, int num_of_ships) {
+
+    draw_background(gameState);
+
+    // if the game is in the positioning rounds
+    if (gameState->player1turn == true){
+
+        // draw the indication sign at 47 x 53
+        int x_location = 47;
+        int y_location = 54;
+        for (int y_pixel = 0; y_pixel < 15; y_pixel++) {
+            for (int x_pixel = 0; x_pixel < 7; x_pixel++) {
+                if (turn_indicator[y_pixel][x_pixel] != 0){
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                    *frame_buffer = turn_indicator[y_pixel][x_pixel];
+                }
+            }
+        }
+
+        for (int ship_num = 0; ship_num < num_of_ships; ship_num++){
+            draw_ship(gameState->playerships[0][ship_num]->size, 
+                    gameState->playerships[0][ship_num]->vertical,
+                    gameState->playerships[0][ship_num]->col,
+                    gameState->playerships[0][ship_num]->row);
+        }
      
-    } else if (gamestate->placementRound == false && gamestate->player1turn == true){
+    } else {
 
+        // draw the indication sign at 204 x 53
+        int x_location = 204;
+        int y_location = 54;
+        for (int y_pixel = 0; y_pixel < 15; y_pixel++) {
+            for (int x_pixel = 0; x_pixel < 7; x_pixel++) {
+                if (turn_indicator[y_pixel][x_pixel] != 0){
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                    *frame_buffer = turn_indicator[y_pixel][x_pixel];
+                }
+            }
+        }
 
-// ------------------ placement rounds up vs game rounds down --------------------------------------------
-
-
-    } else if (gamestate->placementRound == false && gamestate->player1turn == true){
-
-    } else { // gamestate->placementRound == false && gamestate->player1turn == false
+        for (int ship_num = 0; ship_num < num_of_ships; ship_num++){
+        draw_ship(gameState->playerships[1][ship_num]->size, 
+                gameState->playerships[1][ship_num]->vertical,
+                gameState->playerships[1][ship_num]->col,
+                gameState->playerships[1][ship_num]->row);
+        }
 
     }
 
 }
 
-void draw_placement_game_board(GameState* gamestate) {
-  // draw the placement board
-  for (int y_pixel = 0; y_pixel < 240; y_pixel++) {
-    for (int x_pixel = 0; x_pixel < 320; x_pixel++) {
-      // get the pixel of the screen and print
-    }
-  }
+void draw_game_board(GameState* gamestate) {
+
+    draw_background();
+
 }
 
 // ----------------------------------------------------------------------------
@@ -8417,17 +8513,30 @@ int main() {
 
     int shipToPlace = 0;
     int turn;
+    bool need_to_draw = true;
 
     // call function to draw the game screen (ship positioning stage)
 
     while (gameState->placementRound) {
+
+        if(need_to_draw == true){
+            draw_placement_game_board(gameState, shipToPlace);
+            need_to_draw = false;
+        }
+
       // players take turns placing ships
       turn = gameState->player1turn ? 0 : 1;
       Ship* ship = gameState->playerships[turn][shipToPlace];
 
       int key = getKEYPress(KEY_ptr);
-      if (key == 3) gameState->colsel = !(gameState->colsel);
-      if (key == 2) ship->vertical = !(ship->vertical);
+      if (key == 3) {
+        gameState->colsel = !(gameState->colsel);
+        need_to_draw = true;
+        }
+      if (key == 2) {
+        ship->vertical = !(ship->vertical);
+        need_to_draw = true;
+      }
       if (gameState->colsel) {
         ship->col = getSWNum(SW_ptr, ship->col);
       } else {
@@ -8443,6 +8552,7 @@ int main() {
           for (int i = 0; i < ship->size; i++) {
             gameState->shipboard[turn][ship->row][ship->col + i] = shipToPlace;
           }
+          need_to_draw = true;
         }
 
         shipToPlace++;
@@ -8456,8 +8566,7 @@ int main() {
             }
         }
       }
-
-      // PRINT OUT THE BOARD FOR PLACEMENT
+      
     }
 
     while (!(gameState->gameOver)) {
