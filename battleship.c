@@ -14,12 +14,18 @@
 #define BUFFER_ADDRESS 0x8000000
 
 const short int crosshairs[12][12] = { 
-    {0,65503,65503,65535,65535,65503,65503,65535,65503,65503,65503,0}, {65503,0,65503,0,0,0,0,0,0,65503,0,63422}, 
-    {65503,65503,0,64480,64480,64480,64480,64480,62369,0,65503,65503}, {65503,0,64480,64480,0,0,0,0,62432,62433,0,65535}, 
-    {65503,0,62401,0,0,65535,65535,0,0,64480,0,65535}, {65503,0,64480,0,65503,57572,59620,65535,0,64480,0,65535}, 
-    {65503,0,64480,0,65535,57572,59620,65535,0,64480,0,65535}, {65503,0,64480,0,0,65535,65535,0,0,64480,0,65535}, 
-    {65503,0,64448,64480,0,0,0,0,64480,62401,0,65535}, {65503,65535,0,62401,64480,64480,64480,64480,62433,0,65535,65535}, 
-    {65535,0,65535,0,0,0,0,0,0,65503,0,65535}, {0,65503,65503,65503,65503,65503,65503,65503,65503,65503,65535,0} };
+    {65000,65503,65503,65535,65535,65503,65503,65535,65503,65503,65503,65000}, 
+    {65503,65000,65503,0,0,0,0,0,0,65503,65000,63422}, 
+    {65503,65503,0,64480,64480,64480,64480,64480,62369,0,65503,65503}, 
+    {65503,0,64480,64480,0,0,0,0,62432,62433,0,65535}, 
+    {65503,0,62401,0,0,65535,65535,0,0,64480,0,65535}, 
+    {65503,0,64480,0,65503,57572,59620,65535,0,64480,0,65535}, 
+    {65503,0,64480,0,65535,57572,59620,65535,0,64480,0,65535}, 
+    {65503,0,64480,0,0,65535,65535,0,0,64480,0,65535}, 
+    {65503,0,64448,64480,0,0,0,0,64480,62401,0,65535}, 
+    {65503,65535,0,62401,64480,64480,64480,64480,62433,0,65535,65535}, 
+    {65535,65000,65535,0,0,0,0,0,0,65503,65000,65535}, 
+    {65000,65503,65503,65503,65503,65503,65503,65503,65503,65503,65535,65000} };
 
 const short int water_square[12][12] = { 
     {1404,1469,1469,1469,1469,1469,1469,1469,1469,1469,1469,1404}, {1469,1469,1469,1469,1469,1469,1469,1469,1469,1469,1469,1469}, 
@@ -8548,9 +8554,12 @@ void draw_game_board(GameState* gameState) {
         int x_location = gameState->col*12 + 180;
         for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
             for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
-                volatile short int *frame_buffer;
-                frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
-                *frame_buffer = crosshairs[y_pixel][x_pixel];
+                short int compare = 65000;
+                if(crosshairs[y_pixel][x_pixel] < compare || crosshairs[y_pixel][x_pixel] == 0){
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                    *frame_buffer = crosshairs[y_pixel][x_pixel];
+                }
             }
         }
     } else {
@@ -8559,9 +8568,12 @@ void draw_game_board(GameState* gameState) {
         int x_location = gameState->col*12 + 24;
         for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
             for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
-                volatile short int *frame_buffer;
-                frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
-                *frame_buffer = crosshairs[y_pixel][x_pixel];
+                short int compare = 65000;
+                if((crosshairs[y_pixel][x_pixel] == 0) || (crosshairs[y_pixel][x_pixel] < compare && crosshairs[y_pixel][x_pixel] != 63420)){
+                    volatile short int *frame_buffer;
+                    frame_buffer = BUFFER_ADDRESS + ((y_pixel + y_location)<<10) + ((x_pixel + x_location)<<1);
+                    *frame_buffer = crosshairs[y_pixel][x_pixel];
+                }
             }
         }
     }
