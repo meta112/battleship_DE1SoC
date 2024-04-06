@@ -8563,9 +8563,9 @@ int main() {
           for (int i = 0; i < ship->size; i++) {
             gameState->shipboard[turn][ship->row][ship->col + i] = shipToPlace;
           }
-          need_to_draw = true;
+          
         }
-
+        need_to_draw = true;
         shipToPlace++;
         if (shipToPlace == 5){
             if (gameState->player1turn){
