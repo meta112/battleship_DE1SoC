@@ -8495,7 +8495,7 @@ void draw_game_board(GameState* gameState) {
             int y_location = y_loc*12 + 83;
             int x_location = x_loc*12 + 24;
             // draw 1 square
-            if(gameState->shotboard[1][x_loc][y_loc] == HIT){
+            if(gameState->shotboard[1][y_loc][x_loc] == HIT){
                 for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
                     for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                         volatile short int *frame_buffer;
@@ -8503,7 +8503,7 @@ void draw_game_board(GameState* gameState) {
                         *frame_buffer = hit_square[y_pixel][x_pixel];
                     }
                 }
-            } else if (gameState->shotboard[1][x_loc][y_loc] == MISS){
+            } else if (gameState->shotboard[1][y_loc][x_loc] == MISS){
                 for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
                     for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                         volatile short int *frame_buffer;
@@ -8522,7 +8522,7 @@ void draw_game_board(GameState* gameState) {
             int y_location = y_loc*12 + 83;
             int x_location = x_loc*12 + 180;
             // draw 1 square
-            if(gameState->shotboard[0][x_loc][y_loc] == HIT){
+            if(gameState->shotboard[0][y_loc][x_loc] == HIT){
                 for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
                     for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                         volatile short int *frame_buffer;
@@ -8530,7 +8530,7 @@ void draw_game_board(GameState* gameState) {
                         *frame_buffer = hit_square[y_pixel][x_pixel];
                     }
                 }
-            } else if (gameState->shotboard[0][x_loc][y_loc] == MISS){
+            } else if (gameState->shotboard[0][y_loc][x_loc] == MISS){
                 for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
                     for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                         volatile short int *frame_buffer;
@@ -8545,7 +8545,7 @@ void draw_game_board(GameState* gameState) {
     if (gameState->player1turn == true){
         // draw crosshairs at board 2 col/row
         int y_location = gameState->row*12 + 83;
-        int x_location = gameState->col*12 + 24;
+        int x_location = gameState->col*12 + 180;
         for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
             for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                 volatile short int *frame_buffer;
@@ -8556,7 +8556,7 @@ void draw_game_board(GameState* gameState) {
     } else {
         // draw crosshairs at board 1 col/row
         int y_location = gameState->row*12 + 83;
-        int x_location = gameState->col*12 + 180;
+        int x_location = gameState->col*12 + 24;
         for (int y_pixel = 0; y_pixel < 12; y_pixel++) {
             for (int x_pixel = 0; x_pixel < 12; x_pixel++) {
                 volatile short int *frame_buffer;
