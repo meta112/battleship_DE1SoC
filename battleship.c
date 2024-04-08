@@ -8691,6 +8691,8 @@ void draw_placement_game_board(GameState* gamestate, int num_of_ships);
 void draw_title_screen();
 void draw_background();
 void draw_ship(int size, bool isVertical, int x_loc, int y_loc);
+void draw_victory_screen_1();
+void draw_victory_screen_2();
 
 volatile int pixel_buffer_start = 0x8000000;   // global variable
 short int Buffer1[240][512];      // 240 rows, 512 (320 + padding) columns
@@ -9066,6 +9068,26 @@ void draw_game_board(GameState* gameState) {
 
 }
 
+void draw_victory_screen_1(){
+    for (int y_pixel = 0; y_pixel < 240; y_pixel++) {
+        for (int x_pixel = 0; x_pixel < 320; x_pixel++) {
+            volatile short int *frame_buffer;
+            frame_buffer = BUFFER_ADDRESS + (y_pixel<<10) + (x_pixel<<1);
+            *frame_buffer = victory1[y_pixel][x_pixel];
+        }
+    }
+}
+
+void draw_victory_screen_2(){
+    for (int y_pixel = 0; y_pixel < 240; y_pixel++) {
+        for (int x_pixel = 0; x_pixel < 320; x_pixel++) {
+            volatile short int *frame_buffer;
+            frame_buffer = BUFFER_ADDRESS + (y_pixel<<10) + (x_pixel<<1);
+            *frame_buffer = victory2[y_pixel][x_pixel];
+        }
+    }
+}
+
 // ----------------------------------------------------------------------------
 
 int getSWNum(volatile int* SW_ptr, int orig) {
@@ -9275,8 +9297,10 @@ int main() {
 
     if (gameState->player1win) {
       // draw victory screen for player 1
+      draw_victory_screen_1();
     } else {
       // victory for player 2
+      draw_victory_screen_2();
     }
 
     while (
