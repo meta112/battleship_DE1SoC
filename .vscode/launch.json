@@ -3,11 +3,22 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
+      "type": "cppdbg",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/nicholasmancilhacarbones/Documents/Documents_UofT/UofT 2nd Year 2nd Semester/ECE_243/final_project/battleship_DE1SoC",
-      "program": "/Users/nicholasmancilhacarbones/Documents/Documents_UofT/UofT 2nd Year 2nd Semester/ECE_243/final_project/battleship_DE1SoC/build/Debug/outDebug"
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/sheng/Desktop/ece243/battleship_project/battleship_DE1SoC",
+      "program": "c:/Users/sheng/Desktop/ece243/battleship_project/battleship_DE1SoC/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
